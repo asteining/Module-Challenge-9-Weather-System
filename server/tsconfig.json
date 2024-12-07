@@ -1,12 +1,14 @@
 {
-  "extends": "../tsconfig.json",
   "compilerOptions": {
-    /* Modules */
-    "rootDir": "src" /* Specify the root folder within your source files. */,
-
-    /* Emit */
-    "outDir": "dist" /* Specify an output folder for all emitted files. */
-    // "noEmitOnError": true /* Disable emitting files if any type checking errors are reported. */
+    "outDir": "./dist",                  // Output directory for compiled files
+    "rootDir": "./src",                  // Root directory for source files
+    "target": "ES2020",                  // ECMAScript target version
+    "module": "ESNext",                  // Module system for modern JavaScript
+    "moduleResolution": "Node",          // Resolve modules using Node.js conventions
+    "esModuleInterop": true,             // Allow interoperability between CommonJS and ES modules
+    "resolveJsonModule": true,           // Allow importing JSON files
+    "strict": true                       // Enable strict type checking
   },
-  "include": ["src"]
+  "include": ["src/**/*"],               // Include all TypeScript files in `src`
+  "exclude": ["node_modules", "dist"]    // Exclude `node_modules` and `dist` folders
 }

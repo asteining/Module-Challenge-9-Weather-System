@@ -1,20 +1,24 @@
-import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import express from 'express';
+import dotenv from 'dotenv';
+import { dot } from 'node:test/reporters';
 dotenv.config();
 
-// Import the routes
-import routes from './routes/index.js';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
-
 const PORT = process.env.PORT || 3001;
 
-// TODO: Serve static files of entire client dist folder
+// Serve static files from the client/dist folder
+app.use(express.static(path.join(__dirname, '../../client/dist')));
 
-// TODO: Implement middleware for parsing JSON and urlencoded form data
+// Route to serve index.html for all other routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
+});
 
-// TODO: Implement middleware to connect the routes
-app.use(routes);
-
-// Start the server on the port
-app.listen(PORT, () => console.log(`Listening on PORT: ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Listening on PORT: ${PORT}`);
+});
