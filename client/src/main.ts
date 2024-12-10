@@ -1,7 +1,10 @@
+
 import './styles/jass.css';
 
 async function fetchWeather(cityName: string) {
   try {
+    console.log('Sending request to /api/weather with cityName:', cityName);
+
     const response = await fetch('/api/weather', {
       method: 'POST',
       headers: {
@@ -10,13 +13,37 @@ async function fetchWeather(cityName: string) {
       body: JSON.stringify({ cityName }),
     });
 
+    console.log('Response status:', response.status);
+    console.log('Response status text:', response.statusText);
+
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Error response body:', errorText);
       throw new Error(`Error: ${response.statusText}`);
+    }
+    
+    function displayForecast(data: any) {
+      const forecastContainer = document.getElementById('forecast');
+      if (forecastContainer) {
+        forecastContainer.innerHTML = ''; // Clear previous forecast
+        data.list.slice(1, 6).forEach((forecast: any) => {
+          const forecastElement = document.createElement('div');
+          forecastElement.className = 'forecast-item';
+          forecastElement.innerHTML = `
+            <p>Date: ${new Date(forecast.dt * 1000).toLocaleDateString()}</p>
+            <p>Temperature: ${forecast.main.temp} °F</p>
+            <p>Wind: ${forecast.wind.speed} MPH</p>
+            <p>Humidity: ${forecast.main.humidity}%</p>
+          `;
+          forecastContainer.appendChild(forecastElement);
+        });
+      }
     }
 
     const data = await response.json();
     console.log('Weather Data:', data);
     displayWeather(data);
+    displayForecast(data);
   } catch (error) {
     console.error('Error fetching weather data:', error);
     alert('Failed to fetch weather data. Please try again.');
