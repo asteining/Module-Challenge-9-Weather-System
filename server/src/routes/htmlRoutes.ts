@@ -1,16 +1,14 @@
-import { Router } from 'express';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { Router, type Request, type Response } from 'express';
 
-const router = Router();
-
-// Get the directory name (since __dirname is not available in ES modules)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const router = Router();
 
-// Define route to serve index.html
-router.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
+router.get('*', (_req: Request, res: Response) => {
+  const filePath = path.resolve(__dirname, '../../../client/dist/index.html');
+  res.sendFile(filePath);
 });
 
 export default router;

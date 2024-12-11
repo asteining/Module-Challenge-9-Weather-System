@@ -38,7 +38,6 @@ The Weather Dashboard allows travelers to search for weather forecasts of multip
 6. Node.js
 7. Express
 8. TypeScript
-9. Axios (for making HTTP requests)
 10. dotenv (for managing environment variables)
 11. APIs
 12. OpenWeather API (for weather data)
@@ -115,7 +114,7 @@ Set environment variables (API_KEY).
 Deploy both the server and client.
 
 # 🖼️ Screenshots
-Add screenshots of your application in action.
+![Alt Test](client/src/styles/Weather_Screenshot.png)
 
 
 # 📜 License
@@ -124,4 +123,5 @@ This project is licensed under the MIT License.
 # Thank You! 🌟
 If you have any questions or need further assistance, feel free to open an issue or reach out!
 
-# https://github.com/asteining/Module-Challenge-9-Weather-System
+# Website Link
+1. http://localhost:3001/

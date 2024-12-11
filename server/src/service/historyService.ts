@@ -1,35 +1,61 @@
+import fs from 'node:fs/promises';
 import { v4 as uuidv4 } from 'uuid';
-import * as fs from 'fs/promises';
 
-interface City {
+
+class City {
+  name: string;
   id: string;
-  cityName: string;
+
+  constructor(name: string, id: string) {
+    this.name = name;
+    this.id = id;
+  }
 }
 
-const FILE_PATH = './data/searchHistory.json';
+class HistoryService {
+  private historyFile = 'db/db.json';
 
-const HistoryService = {
-  async getHistory(): Promise<City[]> {
-    const data = await fs.readFile(FILE_PATH, 'utf-8');
-    return JSON.parse(data) as City[];
-  },
+  private async readFile() {
+    return await fs.readFile(this.historyFile, { flag: 'a+', encoding: 'utf8' });
+  }
 
-  async addCity(cityName: string): Promise<City> {
-    const history = await this.getHistory();
-    const newCity: City = { id: uuidv4(), cityName };
-    history.push(newCity);
-    await fs.writeFile(FILE_PATH, JSON.stringify(history, null, 2));
-    return newCity;
-  },
+  private async writeFile(cities: City[]) {
+    return await fs.writeFile(this.historyFile, JSON.stringify(cities, null, 2));
+  }
 
-  async deleteCity(id: string): Promise<string | null> {
-    const history = await this.getHistory();
-    const updatedHistory = history.filter((city) => city.id !== id);
-    if (history.length === updatedHistory.length) return null;
+  async retrieveCities() {
+    return await this.readFile().then((data) => {
+      try {
+        return JSON.parse(data) as City[];
+      } catch {
+        return [];
+      }
+    });
+  }
 
-    await fs.writeFile(FILE_PATH, JSON.stringify(updatedHistory, null, 2));
-    return id;
-  },
-};
+  async saveCity(cityName: string) {
+    if (!cityName) {
+      throw new Error('City name cannot be empty');
+    }
 
-export default HistoryService;
+    const newCity = new City(cityName, uuidv4());
+
+    return await this.retrieveCities()
+      .then((cities) => {
+        if (cities.some((city) => city.name === cityName)) {
+          return cities;
+        }
+        return [...cities, newCity];
+      })
+      .then((updatedCities) => this.writeFile(updatedCities))
+      .then(() => newCity);
+  }
+
+  async deleteCity(id: string) {
+    return await this.retrieveCities()
+      .then((cities) => cities.filter((city) => city.id !== id))
+      .then((updatedCities) => this.writeFile(updatedCities));
+  }
+}
+
+export default new HistoryService();
