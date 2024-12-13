@@ -36,7 +36,7 @@ API Calls
 */
 
 const fetchWeather = async (cityName: string) => {
-  const response = await fetch('/api/weather/', {
+  const response = await fetch('https://module-challenge-9-weather-system-backend.onrender.com/', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ const fetchWeather = async (cityName: string) => {
 };
 
 const fetchSearchHistory = async () => {
-  const history = await fetch('/api/weather/history', {
+  const history = await fetch('https://module-challenge-9-weather-system-backend.onrender.com/', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ const fetchSearchHistory = async () => {
 };
 
 const deleteCityFromHistory = async (id: string) => {
-  await fetch(`/api/weather/history/${id}`, {
+  await fetch(`https://module-challenge-9-weather-system-backend.onrender.com/${id}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
